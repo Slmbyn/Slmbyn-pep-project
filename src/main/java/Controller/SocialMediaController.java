@@ -1,7 +1,11 @@
 package Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+// TODO: Import the Models
+// TODO: Import the Service files
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
@@ -18,6 +22,35 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.get("example-endpoint", this::exampleHandler);
 
+        // List all the needed endpoints here like this:
+            /**
+                app.get("/books", this::getAllBooksHandler);
+                app.post("/books", this::postBookHandler);
+                app.get("/authors", this::getAllAuthorsHandler);
+                app.post("/authors", this::postAuthorHandler);
+                app.get("/books/available", this::getAvailableBooksHandler);
+                app.start(8080);
+            */
+
+            // process user registration
+            app.post("/register", this::registerUserHandler);
+            // process user login
+            app.post("/login", this::loginUserHandler);
+            // create new message
+            app.post("messages", this::newMessageHandler);
+            // retrieve all messages
+            app.get("messages", this::getAllMessagesHandler);
+            // get message by ID
+            app.get("/messages/{message_id}", this::getMessageByIdHandler);
+            // delete message by id
+            app.delete("/message/{message_id}", this::deleteMessageByIdHandler);
+            // update a message text by ID
+            app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
+            // get all messages by a specific user
+            app.get("/accounts/{account_id}/messages", this::getUsersMessagesHandler);
+
+
+
         return app;
     }
 
@@ -28,6 +61,54 @@ public class SocialMediaController {
     private void exampleHandler(Context context) {
         context.json("sample text");
     }
+
+    private void registerUserHandler(Context ctx) throws JsonProcessingException {
+        // TODO: Write Logic Here
+    };
+
+    private void loginUserHandler(Context ctx) throws JsonProcessingException {
+        // TODO: Write Logic Here
+    };
+
+    private void newMessageHandler(Context ctx) throws JsonProcessingException {
+        // TODO: Write Logic Here
+    };
+
+    private void getAllMessagesHandler(Context ctx) throws JsonProcessingException {
+        // TODO: Write Logic Here
+    };
+
+    private void getMessageByIdHandler(Context ctx) throws JsonProcessingException {
+        // TODO: Write Logic Here
+    };
+
+    private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException {
+        // TODO: Write Logic Here
+    };
+
+    private void updateMessageByIdHandler(Context ctx) throws JsonProcessingException {
+        // TODO: Write Logic Here
+    };
+
+    private void getUsersMessagesHandler(Context ctx) throws JsonProcessingException {
+        // TODO: Write Logic Here
+    };
+
+
+
+    // Write out the logic for each endpoint here, calling the neccessary service method, like this:
+        /**
+            private void postBookHandler(Context ctx) throws JsonProcessingException {
+                ObjectMapper mapper = new ObjectMapper();
+                Book book = mapper.readValue(ctx.body(), Book.class);
+                Book addedBook = bookService.addBook(book);
+                if(addedBook!=null){
+                    ctx.json(mapper.writeValueAsString(addedBook));
+                }else{
+                    ctx.status(400);
+                }
+            }
+        */
 
 
 }
