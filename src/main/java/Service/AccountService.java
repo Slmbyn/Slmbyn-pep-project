@@ -24,8 +24,8 @@ public class AccountService {
         return accountDAO.registerNewUser(account);
     }
 
-    public Account loginUser(Account account) {
-        return accountDAO.loginUser(account);
+    public Account loginUser(String username, String password) {
+        return accountDAO.loginUser(username, password);
     }
 
     public List<Message> getUsersMessages(Account account) {
