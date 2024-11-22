@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -83,7 +84,29 @@ public class AccountDAO {
         return null;
     }
 
-    public List<Message> getUsersMessages(Account account) {
-        return null;
+    public List<Message> getUsersMessages(int account_id) {
+        List<Message> messages = new ArrayList<>();
+
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM Message WHERE posted_by = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, account_id);
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                int message_id = rs.getInt("message_id");
+                int posted_by = rs.getInt("posted_by");
+                String message_text = rs.getString("message_text");
+                Long time_posted_epoch = rs.getLong("time_posted_epoch");
+                Message newMessage = new Message(message_id, posted_by, message_text, time_posted_epoch);
+                messages.add(newMessage);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return messages;
     }
 }
