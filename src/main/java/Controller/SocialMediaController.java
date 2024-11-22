@@ -72,12 +72,12 @@ public class SocialMediaController {
         Account account = objectMapper.readValue(jsonString, Account.class);
 
         if (account.getUsername() == null || account.getUsername().isBlank()){
-            ctx.status(400).result("Username cant be blank");
+            ctx.status(400);
             return;
         }
 
         if (account.getPassword() == null || account.getPassword().length() < 4){
-            ctx.status(400).result("Password too short");
+            ctx.status(400);
             return;
         }
 
@@ -86,7 +86,7 @@ public class SocialMediaController {
         Account existingAccount = acctService.getAccountByUsername(account.getUsername());
         
         if (existingAccount != null) {
-            ctx.status(400).result("Username already taken");
+            ctx.status(400);
             return;
         }
 
@@ -95,7 +95,7 @@ public class SocialMediaController {
         if (newAccount != null) {
             ctx.status(200).json(newAccount);
         } else {
-            ctx.status(400).result("Acct creation failed");
+            ctx.status(400);
         }
     };
 
