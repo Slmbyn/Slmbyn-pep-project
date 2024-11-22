@@ -1,9 +1,12 @@
 package Controller;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
+import Model.Message;
 import Service.AccountService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -108,6 +111,16 @@ public class SocialMediaController {
             ctx.status(401);
         }
 
+    };
+
+    private void getUsersMessagesHandler(Context ctx) throws JsonProcessingException {
+        int account_id = Integer.parseInt(ctx.pathParam("account_id"));
+
+        AccountService acctService = new AccountService();
+        List<Message> messages = acctService.getUsersMessages(account_id);
+
+        ctx.status(200).json(messages);
+
         };
 
     private void newMessageHandler(Context ctx) throws JsonProcessingException {
@@ -130,9 +143,7 @@ public class SocialMediaController {
         // TODO: Write Logic Here
     };
 
-    private void getUsersMessagesHandler(Context ctx) throws JsonProcessingException {
-        // TODO: Write Logic Here
-    };
+
 
 
 

@@ -28,7 +28,7 @@ public class AccountService {
         return accountDAO.loginUser(username, password);
     }
 
-    public List<Message> getUsersMessages(Account account) {
-        return accountDAO.getUsersMessages(account);
+    public List<Message> getUsersMessages(int account_id) {
+        return accountDAO.getUsersMessages(account_id);
     }
 }
