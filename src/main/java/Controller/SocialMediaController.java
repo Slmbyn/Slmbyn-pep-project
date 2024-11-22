@@ -1,7 +1,10 @@
 package Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import Model.Account;
+import Service.AccountService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 // TODO: Import the Models
@@ -62,8 +65,38 @@ public class SocialMediaController {
         context.json("sample text");
     }
 
+    
     private void registerUserHandler(Context ctx) throws JsonProcessingException {
-        // TODO: Write Logic Here
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = ctx.body();
+        Account account = objectMapper.readValue(jsonString, Account.class);
+
+        if (account.getUsername() == null || account.getUsername().isBlank()){
+            ctx.status(400).result("Username cant be blank");
+            return;
+        }
+
+        if (account.getPassword() == null || account.getPassword().length() < 4){
+            ctx.status(400).result("Password too short");
+            return;
+        }
+
+        AccountService acctService = new AccountService();
+
+        Account existingAccount = acctService.getAccountByUsername(account.getUsername());
+        
+        if (existingAccount != null) {
+            ctx.status(400).result("Username already taken");
+            return;
+        }
+
+        Account newAccount = acctService.registerNewUser(account);
+
+        if (newAccount != null) {
+            ctx.status(200).json(newAccount);
+        } else {
+            ctx.status(400).result("Acct creation failed");
+        }
     };
 
     private void loginUserHandler(Context ctx) throws JsonProcessingException {

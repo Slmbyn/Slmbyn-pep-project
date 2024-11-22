@@ -16,6 +16,10 @@ public class AccountService {
         this.accountDAO = accountDAO;
     }
 
+    public Account getAccountByUsername(String username){
+        return accountDAO.getAccountByUsername(username);
+    }
+
     public Account registerNewUser(Account account) {
         return accountDAO.registerNewUser(account);
     }

@@ -7,6 +7,7 @@ import Util.ConnectionUtil;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
@@ -32,7 +33,28 @@ public class AccountDAO {
 
             }
 
-        } catch (Exception e) {
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Account getAccountByUsername(String username){
+        try (Connection conn = ConnectionUtil.getConnection()){
+            String sql = "SELECT * FROM Account WHERE username = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1,username);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int account_id = rs.getInt("account_id");
+                String acct_username = rs.getString("username");
+                String password = rs.getString("password");
+                return new Account(account_id, acct_username, password);
+            }
+            
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 
