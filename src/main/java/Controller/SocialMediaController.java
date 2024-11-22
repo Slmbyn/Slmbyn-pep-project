@@ -85,8 +85,30 @@ public class SocialMediaController {
     };
 
     private void loginUserHandler(Context ctx) throws JsonProcessingException {
-        // TODO: Write Logic Here
-    };
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = ctx.body();
+        Account account = objectMapper.readValue(jsonString, Account.class);
+
+        if (account.getUsername() == null || account.getUsername().isBlank()){
+            ctx.status(400);
+            return;
+        }
+
+        if (account.getPassword() == null || account.getPassword().length() < 4){
+            ctx.status(400);
+            return;
+        }
+
+        AccountService acctService = new AccountService();
+        Account existingAccount = acctService.loginUser(account.getUsername(), account.getPassword());
+
+        if (existingAccount != null) {
+            ctx.status(200).json(existingAccount);
+        } else {
+            ctx.status(401);
+        }
+
+        };
 
     private void newMessageHandler(Context ctx) throws JsonProcessingException {
         // TODO: Write Logic Here
