@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import Model.Account;
 import Model.Message;
 import Service.AccountService;
+import Service.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 // TODO: Import the Models
@@ -124,7 +125,31 @@ public class SocialMediaController {
         };
 
     private void newMessageHandler(Context ctx) throws JsonProcessingException {
-        // TODO: Write Logic Here
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = ctx.body();
+        Message message = objectMapper.readValue(jsonString,Message.class);
+
+        if (message.getMessage_text().length() == 0 || message.getMessage_text().length() > 255){
+            ctx.status(400);
+            return;
+        }
+
+        AccountService acctService = new AccountService();
+        Account existingAccount = acctService.getAccountById(message.getPosted_by());
+        
+        if (existingAccount == null) {
+            ctx.status(400);
+            return;
+        }
+
+        MessageService messageService = new MessageService();
+        Message newMessage = messageService.createNewMessage(message);
+
+        if(newMessage != null) {
+            ctx.status(200).json(newMessage);
+        } else {
+            ctx.status(400);
+        }
     };
 
     private void getAllMessagesHandler(Context ctx) throws JsonProcessingException {

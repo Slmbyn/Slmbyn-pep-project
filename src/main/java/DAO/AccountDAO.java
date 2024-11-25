@@ -109,4 +109,25 @@ public class AccountDAO {
 
         return messages;
     }
+
+    public Account getAccountById(int account_id){
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            String sql = "SELECT * FROM Account WHERE account_id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, account_id);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String acct_username = rs.getString("username");
+                String password = rs.getString("password");
+                return new Account(account_id, acct_username, password);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
 }

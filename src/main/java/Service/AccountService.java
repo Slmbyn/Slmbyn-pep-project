@@ -31,4 +31,8 @@ public class AccountService {
     public List<Message> getUsersMessages(int account_id) {
         return accountDAO.getUsersMessages(account_id);
     }
+
+    public Account getAccountById(int account_id){
+        return accountDAO.getAccountById(account_id);
+    }
 }
