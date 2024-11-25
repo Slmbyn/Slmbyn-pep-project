@@ -153,7 +153,9 @@ public class SocialMediaController {
     };
 
     private void getAllMessagesHandler(Context ctx) throws JsonProcessingException {
-        // TODO: Write Logic Here
+        MessageService messageService = new MessageService();
+        List<Message> messages = messageService.getAllMessages();
+        ctx.status(200).json(messages);
     };
 
     private void getMessageByIdHandler(Context ctx) throws JsonProcessingException {
