@@ -39,7 +39,7 @@ public class SocialMediaController {
             // get message by ID
             app.get("/messages/{message_id}", this::getMessageByIdHandler);
             // delete message by id
-            app.delete("/message/{message_id}", this::deleteMessageByIdHandler);
+            app.delete("/messages/{message_id}", this::deleteMessageByIdHandler);
             // update a message text by ID
             app.patch("/messages/{message_id}", this::updateMessageByIdHandler);
             // get all messages by a specific user
@@ -159,8 +159,7 @@ public class SocialMediaController {
     };
 
     private void getMessageByIdHandler(Context ctx) throws JsonProcessingException {
-        int messageId = Integer.parseInt(ctx.pathParam("message_id"));  // Get message_id from path parameter
-
+        int messageId = Integer.parseInt(ctx.pathParam("message_id"));
         
         MessageService messageService = new MessageService();
         Message foundMessage = messageService.getMessageById(messageId);
@@ -169,10 +168,21 @@ public class SocialMediaController {
             ctx.status(200).json(foundMessage);
         } else {
             ctx.status(200).result("");
-        }    };
+        }
+    };
 
     private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException {
-        // TODO: Write Logic Here
+        int messageId = Integer.parseInt(ctx.pathParam("message_id"));
+
+        
+        MessageService messageService = new MessageService();
+        Message deletedMessage = messageService.deleteMessageById(messageId);
+
+        if (deletedMessage != null) {
+            ctx.status(200).json(deletedMessage);
+        } else {
+            ctx.status(200).result("");
+        }
     };
 
     private void updateMessageByIdHandler(Context ctx) throws JsonProcessingException {
