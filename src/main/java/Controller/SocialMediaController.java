@@ -159,8 +159,17 @@ public class SocialMediaController {
     };
 
     private void getMessageByIdHandler(Context ctx) throws JsonProcessingException {
-        // TODO: Write Logic Here
-    };
+        int messageId = Integer.parseInt(ctx.pathParam("message_id"));  // Get message_id from path parameter
+
+        
+        MessageService messageService = new MessageService();
+        Message foundMessage = messageService.getMessageById(messageId);
+
+        if (foundMessage != null) {
+            ctx.status(200).json(foundMessage);
+        } else {
+            ctx.status(200).result("");
+        }    };
 
     private void deleteMessageByIdHandler(Context ctx) throws JsonProcessingException {
         // TODO: Write Logic Here
