@@ -75,62 +75,65 @@ public class MessageDAO {
         return null;
     }
 
-    public Message deleteMessageById(int message_id) {
-        Connection connection = ConnectionUtil.getConnection();
-    
-        try {
+public Message deleteMessageById(int message_id) {
+    Connection connection = ConnectionUtil.getConnection();
+
+    try {
+        String selectSql = "SELECT * FROM Message WHERE message_id = ?";
+        PreparedStatement selectPs = connection.prepareStatement(selectSql);
+        selectPs.setInt(1, message_id);
+
+        ResultSet rs = selectPs.executeQuery();
+
+        if (rs.next()) {
+            int posted_by = rs.getInt("posted_by");
+            String message_text = rs.getString("message_text");
+            Long time_posted_epoch = rs.getLong("time_posted_epoch");
+
+            String deleteSql = "DELETE FROM Message WHERE message_id = ?";
+            PreparedStatement deletePs = connection.prepareStatement(deleteSql);
+            deletePs.setInt(1, message_id);
+            deletePs.executeUpdate();
+
+            return new Message(message_id, posted_by, message_text, time_posted_epoch);
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return null;
+}
+
+
+public Message updateMessageById(int message_id, Message message) {
+    try (Connection connection = ConnectionUtil.getConnection()) {
+        String sql = "UPDATE Message SET message_text = ? WHERE message_id = ?";
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, message.getMessage_text());
+        ps.setInt(2, message_id);
+
+        int rowsAffected = ps.executeUpdate();
+
+        if (rowsAffected > 0) {
             String selectSql = "SELECT * FROM Message WHERE message_id = ?";
             PreparedStatement selectPs = connection.prepareStatement(selectSql);
             selectPs.setInt(1, message_id);
-    
             ResultSet rs = selectPs.executeQuery();
-    
+
             if (rs.next()) {
                 int posted_by = rs.getInt("posted_by");
                 String message_text = rs.getString("message_text");
                 Long time_posted_epoch = rs.getLong("time_posted_epoch");
-    
-                String deleteSql = "DELETE FROM Message WHERE message_id = ?";
-                PreparedStatement deletePs = connection.prepareStatement(deleteSql);
-                deletePs.setInt(1, message_id);
-                deletePs.executeUpdate();
-    
                 return new Message(message_id, posted_by, message_text, time_posted_epoch);
             }
-    
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-    
-        return null;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
-    
 
-    public Message updateMessageById(Message message) {
-        Connection connection = ConnectionUtil.getConnection();
+    return null;
+}
 
-        try {
-            String sql = "UPDATE Message SET message_text = ? WHERE message_id = ?";
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setString(1, message.getMessage_text());
-            ps.setInt(2,message.getMessage_id());
-
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                int message_id = rs.getInt("message_id");
-                int posted_by = rs.getInt("posted_by");
-                String message_text = rs.getString("message_text");
-                Long time_posted_epoch = rs.getLong("time_posted_epoch");
-                return new Message(message_id, posted_by, message_text, time_posted_epoch);
-            }
-
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
 
 }

@@ -33,7 +33,7 @@ public class MessageService {
         return messageDAO.deleteMessageById(message_id);
     }
 
-    public Message updateMessageById(Message message) {
-        return messageDAO.updateMessageById(message);
+    public Message updateMessageById(int message_id, Message message) {
+        return messageDAO.updateMessageById(message_id, message);
     }
 }

@@ -186,8 +186,37 @@ public class SocialMediaController {
     };
 
     private void updateMessageByIdHandler(Context ctx) throws JsonProcessingException {
-        // TODO: Write Logic Here
-    };
+        int messageId = Integer.parseInt(ctx.pathParam("message_id"));
+        System.out.println("MessageID from Param: " + messageId);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonString = ctx.body();
+        Message updatedMessage = objectMapper.readValue(jsonString, Message.class);
+        System.out.println("updatedMessage: " + updatedMessage);
+        
+        MessageService messageService = new MessageService();
+        Message messageExists = messageService.getMessageById(messageId);
+        System.out.println("messageExists: " + messageExists);
+        
+        if (messageExists == null) {
+            ctx.status(400);
+            return;
+        }
+        
+        if (updatedMessage.getMessage_text() == null || updatedMessage.getMessage_text().length() == 0 || updatedMessage.getMessage_text().length() > 255) {
+            ctx.status(400);
+            return;
+        }
+        
+        Message newMessage = messageService.updateMessageById(messageId, updatedMessage);
+        System.out.println("newMessage: " + newMessage);
+    
+        if (newMessage != null) {
+            ctx.status(200).json(newMessage);
+        } else {
+            ctx.status(200).result("");
+        }
+    }
+    
 
 
 
