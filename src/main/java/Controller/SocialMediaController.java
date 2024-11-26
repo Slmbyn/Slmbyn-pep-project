@@ -11,8 +11,6 @@ import Service.AccountService;
 import Service.MessageService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
-// TODO: Import the Models
-// TODO: Import the Service files
 
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
@@ -187,15 +185,12 @@ public class SocialMediaController {
 
     private void updateMessageByIdHandler(Context ctx) throws JsonProcessingException {
         int messageId = Integer.parseInt(ctx.pathParam("message_id"));
-        System.out.println("MessageID from Param: " + messageId);
         ObjectMapper objectMapper = new ObjectMapper();
         String jsonString = ctx.body();
         Message updatedMessage = objectMapper.readValue(jsonString, Message.class);
-        System.out.println("updatedMessage: " + updatedMessage);
         
         MessageService messageService = new MessageService();
         Message messageExists = messageService.getMessageById(messageId);
-        System.out.println("messageExists: " + messageExists);
         
         if (messageExists == null) {
             ctx.status(400);
@@ -208,7 +203,6 @@ public class SocialMediaController {
         }
         
         Message newMessage = messageService.updateMessageById(messageId, updatedMessage);
-        System.out.println("newMessage: " + newMessage);
     
         if (newMessage != null) {
             ctx.status(200).json(newMessage);
@@ -217,24 +211,5 @@ public class SocialMediaController {
         }
     }
     
-
-
-
-
-
-    // Write out the logic for each endpoint here, calling the neccessary service method, like this:
-        /**
-            private void postBookHandler(Context ctx) throws JsonProcessingException {
-                ObjectMapper mapper = new ObjectMapper();
-                Book book = mapper.readValue(ctx.body(), Book.class);
-                Book addedBook = bookService.addBook(book);
-                if(addedBook!=null){
-                    ctx.json(mapper.writeValueAsString(addedBook));
-                }else{
-                    ctx.status(400);
-                }
-            }
-        */
-
 
 }
